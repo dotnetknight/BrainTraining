@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="BrainTrainingModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="GameSaves">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="254" Nullable="false" />
+          <Property Name="MemoryPowerRound" Type="int" Nullable="false" />
+          <Property Name="MemoryPowerPoints" Type="int" Nullable="false" />
+          <Property Name="LeftOrRightRound" Type="int" Nullable="false" />
+          <Property Name="LeftOrRightPoints" Type="int" Nullable="false" />
+          <Property Name="MultiTaskingRound" Type="int" Nullable="false" />
+          <Property Name="MultiTaskingPoints" Type="int" Nullable="false" />
+          <Property Name="RememberFacesRound" Type="int" Nullable="false" />
+          <Property Name="RememberFacesPoints" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="254" Nullable="false" />
+          <Property Name="PasswordHash" Type="varchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="BrainTrainingModelStoreContainer">
+          <EntitySet Name="GameSaves" EntityType="Self.GameSaves" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BrainTrainingModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="GameSave">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" MaxLength="254" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MemoryPowerRound" Type="Int32" Nullable="false" />
+          <Property Name="MemoryPowerPoints" Type="Int32" Nullable="false" />
+          <Property Name="LeftOrRightRound" Type="Int32" Nullable="false" />
+          <Property Name="LeftOrRightPoints" Type="Int32" Nullable="false" />
+          <Property Name="MultiTaskingRound" Type="Int32" Nullable="false" />
+          <Property Name="MultiTaskingPoints" Type="Int32" Nullable="false" />
+          <Property Name="RememberFacesRound" Type="Int32" Nullable="false" />
+          <Property Name="RememberFacesPoints" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="254" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PasswordHash" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityContainer Name="BrainTrainingEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="GameSaves" EntityType="Self.GameSave" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BrainTrainingModelStoreContainer" CdmEntityContainer="BrainTrainingEntities">
+          <EntitySetMapping Name="GameSaves">
+            <EntityTypeMapping TypeName="BrainTrainingModel.GameSave">
+              <MappingFragment StoreEntitySet="GameSaves">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="MemoryPowerRound" ColumnName="MemoryPowerRound" />
+                <ScalarProperty Name="MemoryPowerPoints" ColumnName="MemoryPowerPoints" />
+                <ScalarProperty Name="LeftOrRightRound" ColumnName="LeftOrRightRound" />
+                <ScalarProperty Name="LeftOrRightPoints" ColumnName="LeftOrRightPoints" />
+                <ScalarProperty Name="MultiTaskingRound" ColumnName="MultiTaskingRound" />
+                <ScalarProperty Name="MultiTaskingPoints" ColumnName="MultiTaskingPoints" />
+                <ScalarProperty Name="RememberFacesRound" ColumnName="RememberFacesRound" />
+                <ScalarProperty Name="RememberFacesPoints" ColumnName="RememberFacesPoints" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="BrainTrainingModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

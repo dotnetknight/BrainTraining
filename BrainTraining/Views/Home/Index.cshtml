@@ -1,0 +1,179 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Brain Training</title>
+
+    <link rel="icon" type="image/x-icon" href="https://images6.alphacoders.com/555/555590.jpg" />
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,500' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+
+    <link href="~/Content/mobile-menu.css" rel="stylesheet">
+    <link href="~/Fonts/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="main-wrapper">
+        <div id="preloader">
+            <div id="status">
+                <div class="status-mes"></div>
+            </div>
+        </div>
+
+        <div class="uc-mobile-menu-pusher">
+            <div class="content-wrapper">
+                <nav class="navbar m-menu navbar-default navbar-fixed-top">
+                    <div class="container">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <a class="navbar-brand" style="color:orange; font-weight:bolder;">Hey @BrainTraining.Controllers.HomeController.Name! </a>
+                                using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutform" }))
+                                { <a href="javascript:document.getElementById('logoutform').submit()" class="logout">Logout</a> }
+                            }
+                        </div>
+
+                        <div class="collapse navbar-collapse" id="#navbar-collapse-1">
+                            <ul class="nav navbar-nav navbar-right main-nav">
+                                <li class="active"><a href="~/Home" style="color:#31aae2; font-weight: bolder;">Home</a></li>
+                                @if (!User.Identity.IsAuthenticated)
+                                {
+                                <li><a href="~/Account/Login" style="color:#31aae2; font-weight: bolder;">Account</a></li> }
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                <li><a href="~/Account/MyProfile" style="color:#31aae2; font-weight: bolder;">My Profile</a></li> }
+                                <li><a href="~/Contact" style="color:#31aae2; font-weight: bolder;">Contact</a></li>
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <li class="dropdown m-menu-fw">
+                                        <a href="#" data-toggle="dropdown" class="dropdown-toggle" style="color:#31aae2; font-weight: bolder;">
+                                            Training
+                                            <span><i class="fa fa-angle-down"></i></span>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <div class="m-menu-content">
+                                                    <ul class="col-sm-3">
+                                                        <li class="dropdown-header">Choose:</li>
+                                                        <li><a href="~/Training/LeftOrRight">Left Or Right</a></li>
+                                                        <li><a href="~/Training/MemoryPower">Memory Power</a></li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+            <div id="x-corp-carousel" class="carousel slide hero-slide hidden-xs" data-ride="carousel">
+
+                <ol class="carousel-indicators">
+                    <li data-target="#x-corp-carousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#x-corp-carousel" data-slide-to="1"></li>
+                </ol>
+
+                <div class="carousel-inner" role="listbox">
+                    <div class="item active">
+                        <img src="http://wallpaperget.com/images/brain-wallpaper-hd-25.jpg" style="width:100%;" alt="Left or right">
+                        <div class="carousel-caption">
+                            <h1>Left or Right?</h1>
+
+                        </div>
+                    </div>
+
+                    <div class="item" style="height: 758px;">
+                        <img src="https://images8.alphacoders.com/560/thumb-1920-560736.jpg" alt="...">
+
+                        <div class="carousel-caption">
+                            <h1 style="color: yellow;">Increase memory power</h1>
+                        </div>
+                    </div>
+                </div>
+
+                <a class="left carousel-control" href="#x-corp-carousel" role="button" data-slide="prev">
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#x-corp-carousel" role="button" data-slide="next">
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+
+            <section class="x-services ptb-100 gray-bg">
+                <section class="section-title">
+                    <div class="container text-center">
+                        <h2>The Point</h2>
+                        <span class="bordered-icon"><i class="fa fa-circle-thin"></i></span>
+                    </div>
+                </section>
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="thumbnail clearfix">
+                                <a><img class="img-responsive" src="http://hd.wallpaperswide.com/thumbs/left_right_brain-t2.jpg" alt="Image" style="width: 65%; height:10%;"></a>
+
+                                <div class="caption">
+                                    <h3><a>Left Or Right</a></h3>
+
+                                    <p>Left side of your brain tries to read the text, while right side tries to recognize the color. Try balance them.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+
+                            <div class="thumbnail clearfix">
+                                <a><img class="img-responsive" src="https://i.ytimg.com/vi/1zhjcMBDivI/maxresdefault.jpg" alt="Image" style="width: 63%; height: 10%;"></a>
+
+                                <div class="caption">
+                                    <h3><a>Memory Power</a></h3>
+
+                                    <p>Remember shown objects and choose them in same order. Let's see how big your memory capability is.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="SignIn">
+                        @if (!User.Identity.IsAuthenticated)
+                        { <center><label id="SignInLBL"><a href="~/Account/Login">Create or login to account</a> and start training today!</label></center>}
+                    </div>
+
+                    <br />
+
+                    <div class="copyright-section" style="text-align: center;">
+                        <div class="container clearfix">
+                            <span class="copytext">Copyright &copy; 2018 | <a href="http://nqportfolio.azurewebsites.net" target="_blank">NQ Enterprises</a></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </div>
+
+    <script src="~/Scripts/jquery-2.1.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="~/Scripts/smoothscroll.js"></script>
+    <script src="~/Scripts/mobile-menu.js"></script>
+    <script src="~/Scripts/FlexSlider/jquery.flexslider-min.js"></script>
+    <script src="~/Scripts/scripts.js"></script>
+</body>
+</html>

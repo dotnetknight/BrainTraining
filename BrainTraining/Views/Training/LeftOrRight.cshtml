@@ -1,0 +1,270 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Left Or Right</title>
+
+    <link rel="icon" type="image/x-icon" href="https://images6.alphacoders.com/555/555590.jpg" />
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,500' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+
+    <link href="~/Content/mobile-menu.css" rel="stylesheet" />
+    <link href="~/Fonts/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/style.css" rel="stylesheet" />
+</head>
+
+<body id="LeftOrRight">
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+    <div id="preloader">
+        <div id="status">
+            <div class="status-mes"></div>
+        </div>
+    </div>
+
+    <div class="uc-mobile-menu-pusher">
+
+        <div class="content-wrapper">
+            <nav class="navbar m-menu navbar-default navbar-fixed-top">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                                data-target="#navbar-collapse-1">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <a class="navbar-brand" style="color:#fff; font-weight:bolder;">Hey @BrainTraining.Controllers.TrainingController.Name! </a>
+                            using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutform" }))
+                            { <a href="javascript:document.getElementById('logoutform').submit()" class="logout" style="color:#31aae2; ">Logout</a> }
+                        }
+
+                    </div>
+
+                    <div class="collapse navbar-collapse" id="#navbar-collapse-1">
+
+                        <ul class="nav navbar-nav navbar-right main-nav">
+                            <li><a href="~/Home" style="color:#fff; font-weight: bolder;">Home</a></li>
+                            <li><a href="~/Account/MyProfile" style="color:#fff; font-weight: bolder;">My Profile</a></li>
+                            <li><a href="~/Contact" style="color:#fff; font-weight: bolder;">Contact</a></li>
+
+                            <li class="dropdown m-menu-fw">
+                                <a href="#" data-toggle="dropdown" class="dropdown-toggle" style="color:#fff; font-weight: bolder;">
+                                    Training
+                                    <span><i class="fa fa-angle-down"></i></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <div class="m-menu-content">
+                                            <ul class="col-sm-3">
+                                                <li class="dropdown-header">Choose:</li>
+                                                <li><a href="~/Training/LeftOrRight">Left Or Right</a></li>
+                                                <li><a href="~/Training/MemoryPower">Memory Power</a></li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <br />
+            <br />
+            <br />
+
+            <script>
+                var MaxScore = 0;
+                var Interval = 0;
+
+                function Start() {
+                    $.post("/Training/GetColor",
+                        function (response) {
+                            document.getElementById('ProgressBarDiv').style.display = "block";
+                            document.getElementById('ColorBTN').style.display = "block";
+                            document.getElementById('RWbtn').style.display = "block";
+                            document.getElementById('ReplyButtonDiv').style.display = "none";
+                            document.getElementById('ColoredBTN').style.color = response.ColorToShow;
+                            document.getElementById('ColoredBTN').innerText = response.ColorText;
+                            document.getElementById('ColoredBTN').value = response.ColorVal;
+                            document.getElementById('StartButtonDiv').style.display = "none";
+                            document.getElementById('InfoLBLDiv').style.display = "none";
+
+                            MaxScore = response.RoundMaxScore;
+                            Interval = response.RoundInterval;
+
+                            move();
+                        }
+                     );
+                }
+                
+                var Attempts = 0;
+                var Points = @BrainTraining.Controllers.TrainingController.Points;
+                var Round = @BrainTraining.Controllers.TrainingController.Round;
+
+                function Validation(BtnID) {
+                    var BTN = document.getElementById('ColoredBTN');
+
+                    if (BtnID == 'RightBTN') {
+
+                        if (BTN.style.color == BTN.value) {
+                            Attempts++;
+                            Points++;
+                            document.getElementById('UserPoints').innerText= "Points: " + Points;
+                            move();
+                            if (Attempts == MaxScore) { alert("attemmpts = " + MaxScore + " , LEVEL UP");  Round++; SaveToDB(); } else { Start(); }
+                        }
+                        else { UB(); }
+                    }
+                    else if (BtnID == 'WrongBTN') {
+
+                        if (BTN.style.color == BTN.value) { UB(); }
+                        else {
+                            Attempts++;
+                            Points++;
+                            document.getElementById('UserPoints').innerText = "Points: " + Points;
+                            move();
+                            if (Attempts == MaxScore) { alert("attemmpts = " + MaxScore + "LEVEL UP"); Round++; SaveToDB(); } else { Start(); }
+                        }
+                    }
+                }
+
+                var Clicked = false;
+                var id;
+
+                function move() {
+                    var elem = document.getElementById("BarDiv");
+                    var width;
+                    if (!Clicked) { width = 0; } else { width = 100; clearInterval(id); width = 0; }
+                    id = setInterval(frame, Interval);
+                 
+                    function frame() {
+                        Clicked = true;
+                        if (width >= 100) {
+                            document.getElementById('ColorBTN').style.display = "none";
+                            document.getElementById('RWbtn').style.display = "none";
+                            document.getElementById('StartButtonDiv').style.display = "none";
+                            document.getElementById('ReplyButtonDiv').style.display = "block";
+                            document.getElementById('UserPoints').innerText = "Points: " + @BrainTraining.Controllers.TrainingController.Points;
+                            document.getElementById('UserRound').innerText = "Round: " + @BrainTraining.Controllers.TrainingController.Round;
+                            document.getElementById('InfoLBLDiv').style.display = "block";
+                            document.getElementById('InfoLBL').innerText = "Time is out!";
+                            document.getElementById('ProgressBarDiv').style.display = "none";
+
+                            clearInterval(id);
+
+                        } else {
+                            width += 20;
+                            elem.style.width = width + '%';
+                        }
+                    }
+                }
+
+                function SaveToDB()
+                {
+                    SaveUserData();
+                    function SaveUserData() {
+                        $.post("/Training/Save",
+                        { userPTZ: Points, userRound: Round, Game: "LeftOrRight" },
+                              function (response) {
+                                  Attempts = 0; Points =  @BrainTraining.Controllers.TrainingController.Points; Round = @BrainTraining.Controllers.TrainingController.Round;
+
+                                  document.getElementById('UserPoints').innerText = "Points: " + @BrainTraining.Controllers.TrainingController.Points;
+                                  document.getElementById('UserRound').innerText = "Round: " + @BrainTraining.Controllers.TrainingController.Round;
+                                  Start();
+                              }
+                           );
+                    }
+                }
+
+                function UB()
+                {
+                    Attempts = 0;
+                    alert("Balancing was unsuccessful");
+                    Points = @BrainTraining.Controllers.TrainingController.Points;
+                    Round = @BrainTraining.Controllers.TrainingController.Round;
+
+                    document.getElementById('ProgressBarDiv').style.display = "none";
+                    document.getElementById('UserPoints').innerText = "Points: " + @BrainTraining.Controllers.TrainingController.Points;
+                    document.getElementById('UserRound').innerText = "Round: " + @BrainTraining.Controllers.TrainingController.Round;
+                    document.getElementById('ColorBTN').style.display = "none";
+                    document.getElementById('RWbtn').style.display = "none";
+                    document.getElementById('StartButtonDiv').style.display = "none";
+                    document.getElementById('ReplyButtonDiv').style.display = "block";
+                }
+
+            </script>
+
+            <div id="UserStats">
+                <label id="UserPoints">Points: @BrainTraining.Controllers.TrainingController.Points </label>
+                <label id="UserRound">Round: @BrainTraining.Controllers.TrainingController.Round</label>
+            </div>
+
+            <div id="StartButtonDiv">
+                <button class="StartBTNlf" onclick="Start()">Start</button>
+            </div>
+
+            <div id="ReplyButtonDiv">
+                <button class="ReplyBTNlf" onclick="Start()">Reply</button>
+            </div>
+
+            <div id="ColorBTN">
+                <button id="ColoredBTN"></button>
+            </div>
+
+            <div id="InfoLBLDiv">
+                <label id="InfoLBL"></label>
+            </div>
+
+            <br />
+            <br />
+
+            <div id="RWbtn">
+                <button id="RightBTN" onclick="Validation(this.id)" class="RightBTNclass" >RIGHT</button> <button id="WrongBTN" onclick="Validation(this.id)" class="LeftBTNclass">WRONG</button>
+            </div>
+            <br />
+            <br />
+
+            <div id="ProgressBarDiv">
+                <div id="BarDiv"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <br />
+    <br />
+    <section id="Tips1">
+        <div class="TipsCap">
+            <div class="TipsCaption">
+                <h3><a>Tips:</a></h3>
+                <p style="color:#fff; font-weight:bold;">Left side of your brain tries to read the text, while right side tries to recognize the color by balancing these two, find out if text matches the text and click the right button .</p>
+            </div>
+        </div>
+    </section>
+    <br />
+    <br />
+    <div class="copyright-section" style="text-align: center; ">
+        <div class="container clearfix">
+            <span class="copytext" style="color:#fff;">Copyright &copy; 2018 | <a href="http://nqportfolio.azurewebsites.net" target="_blank">NQ Enterprises</a></span>
+        </div>
+    </div>
+
+    <script src="~/Scripts/jquery-2.1.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="~/Scripts/smoothscroll.js"></script>
+    <script src="~/Scripts/mobile-menu.js"></script>
+    <script src="~/Scripts/FlexSlider/jquery.flexslider-min.js"></script>
+    <script src="~/Scripts/scripts.js"></script>
+
+</body>
+</html>

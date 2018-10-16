@@ -1,0 +1,317 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Memory Power</title>
+
+    <link rel="icon" type="image/x-icon" href="https://images6.alphacoders.com/555/555590.jpg" />
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,500' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+
+    <link href="~/Content/mobile-menu.css" rel="stylesheet" />
+    <link href="~/Fonts/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/style.css" rel="stylesheet" />
+</head>
+
+<body id="Memorypower">
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+    <div id="preloader">
+        <div id="status">
+            <div class="status-mes"></div>
+        </div>
+    </div>
+
+    <div class="uc-mobile-menu-pusher">
+
+        <div class="content-wrapper">
+            <nav class="navbar m-menu navbar-default navbar-fixed-top">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                                data-target="#navbar-collapse-1">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <a class="navbar-brand" style="color:orange; font-weight:bolder;">Hey @BrainTraining.Controllers.TrainingController.Name! </a>
+                            using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutform" }))
+                            { <a href="javascript:document.getElementById('logoutform').submit()" class="logout">Logout</a> }
+                        }
+
+                    </div>
+
+                    <div class="collapse navbar-collapse" id="#navbar-collapse-1">
+
+                        <ul class="nav navbar-nav navbar-right main-nav">
+                            <li><a href="~/Home" style="color:#31aae2; font-weight: bolder;">Home</a></li>
+                            <li><a href="~/Account/MyProfile" style="color:#31aae2; font-weight: bolder;">My Profile</a></li>
+                            <li><a href="~/Contact" style="color:#31aae2; font-weight: bolder;">Contact</a></li>
+                            <li class="dropdown m-menu-fw">
+                                <a href="#" data-toggle="dropdown" class="dropdown-toggle" style="color:#31aae2; font-weight: bolder;">
+                                    Training
+                                    <span><i class="fa fa-angle-down"></i></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <div class="m-menu-content">
+                                            <ul class="col-sm-3">
+                                                <li class="dropdown-header">Choose:</li>
+                                                <li><a href="~/Training/LeftOrRight">Left Or Right</a></li>
+                                                <li><a href="~/Training/MemoryPower">Memory Power</a></li>
+                                                <!-- <li><a href="~/Training/MultiTasking">MuiltiTasking</a></li>-->
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <br />
+            <br />
+            <br />
+
+            <script>
+
+                function HideIcons() {
+                    document.getElementById('icons').style.display = "none"; document.getElementById('ReplyButtonDiv').style.display = "none"; document.getElementById('ChooseLBL').style.display = "none"; GetIconsFunc();
+                }
+
+                var ResponseIcons;
+                var ResponseIconsCount = 0;
+                var ResponsePTZ=0;
+                var ResponseRound=0;
+
+                function GetIconsFunc() {
+                    $.post("/Training/GetIcons",
+                          function (response) {
+                              
+                              for(var k=0; k<12;k++) {$('#ChIcon' + k).remove(); $('#DelSpaan').remove(); }
+
+                              ResponseIcons = response.Icons;
+                              ResponseIconsCount = response.IconsCount;
+                              ResponsePTZ = response.PTZ;
+                              ResponseRound = response.Round;
+
+                              var a = ResponseIconsCount - 1;
+                              var myVar;
+                              var k = 0;
+
+                              document.getElementById('StartButtonDiv').style.display = "none";
+                              myVar = setTimeout(Test1, 2100);
+
+                              function Test1() {
+                                  $("#Icon").attr('class', response.Icons[k]);
+                                  document.getElementById('GameStart').style.display = "block";
+
+                                  if (k <= a) { k++; myVar = setTimeout(Test1, 1500); }
+                                  else if (k >= ResponseIconsCount) {
+                                      document.getElementById('GameStart').style.display = "none";
+                                      document.getElementById('icons').style.display = "block";
+                                      document.getElementById('ReplyButtonDiv').style.display = "block";
+                                      document.getElementById('ChooseLBL').style.display = "block";
+                                  }
+
+                                  if(Attempts == 1){
+                                      document.getElementById('UserPoints').innerText = "Points: " + ResponsePTZ;
+                                      document.getElementById('UserRound').innerText = "Round: " + ResponseRound;
+                                  }
+                                  else{ document.getElementById('UserPoints').innerText = "Points: " + Points;
+                                      document.getElementById('UserRound').innerText = "Round: " + Round;
+                                  }
+                              }
+                          }
+                                   );
+                }
+
+                var Points = @BrainTraining.Controllers.TrainingController.Points;
+                var Round = @BrainTraining.Controllers.TrainingController.Round;
+                var Index = 0;
+                var RoundPoints = 0;
+                var RoundAttempts = 0;
+                var Attempts = 1;
+
+                function Ale(Clicked_Id) {
+                    if (Index < ResponseIconsCount) {
+                        var Reply = true;
+                        for (var i = Index; i < ResponseIconsCount; i++) {
+                            if (Clicked_Id == ResponseIcons[i]) {
+                                $("#ChronologicalIcons").append('<span class="fa-stack fa-4x" id="DelSpaan"> <i class="fa fa-circle fa-stack-2x text-primary"></i> <i class="' + ResponseIcons[i] + '" id="ChIcon' + i +'"></i> </span>');
+
+                                if (Index < ResponseIconsCount) {
+                                    Index++; Points++; RoundPoints++;
+                                    if (Index == ResponseIconsCount) {
+
+                                        alert("Round UP!");
+
+                                        document.getElementById('UserPoints').innerText = "Points: " + Points;
+
+                                        if(Attempts < 3) { Attempts++; }
+                                        if (Attempts == 3) { Attempts = 1; Reply = false; Round++; }
+
+                                        if(Reply){
+                                            Index = 0; RoundPoints = 0;
+                                            document.getElementById('ReplyButtonDiv').style.display = "block";
+                                            HideIcons();
+                                        }
+                                        if(!Reply){ SaveToDB(); }
+                                    }
+                                    break;
+                                }
+                            }
+                            else {
+                                alert("Oops! Looks like you've made a mistake :(");
+
+                                Index = 0; RoundPoints = 0; Attempts = 1; Points =  @BrainTraining.Controllers.TrainingController.Points;
+
+                                document.getElementById('UserPoints').innerText = "Points: " + @BrainTraining.Controllers.TrainingController.Points;
+                                document.getElementById('UserRound').innerText = "Round: " + @BrainTraining.Controllers.TrainingController.Round;
+                                HideIcons(); break;
+                            }
+                        }
+                    }
+                }
+
+                function SaveToDB()
+                {
+                    document.getElementById('UserPoints').innerText = "Points: " + Points;
+                    document.getElementById('UserRound').innerText = "Round: " + Round;
+
+                    SaveUserData();
+                    function SaveUserData() {
+                        $.post("/Training/Save",
+                        { userPTZ: Points, userRound: Round, Game: "MemoryPower" },
+                              function (response) {
+                                  Index = 0; RoundPoints = 0; Attempts = 1; Points =  @BrainTraining.Controllers.TrainingController.Points;
+
+                                  document.getElementById('UserPoints').innerText = "Points: " + @BrainTraining.Controllers.TrainingController.Points;
+                                  document.getElementById('UserRound').innerText = "Round: " + @BrainTraining.Controllers.TrainingController.Round;
+                             
+                                  alert("Level UP Cheer UP!");
+                                  HideIcons();
+                              }
+                           );
+                    }
+                }
+
+
+            </script>
+
+            <div id="UserStats">
+                <label id="UserPoints">Points: @BrainTraining.Controllers.TrainingController.Points </label>
+                <label id="UserRound">Round: @BrainTraining.Controllers.TrainingController.Round</label>
+            </div>
+
+            <div id="StartButtonDiv">
+                <button class="StartBTN" onclick="GetIconsFunc()">Start</button>
+            </div>
+
+            <div id="ReplyButtonDiv">
+                <button class="ReplyBTN" onclick="HideIcons()">Reply</button>
+            </div>
+
+            <div id="GameStart">
+                <span class="fa-stack fa-4x">
+                    <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                    <i id="Icon" class="fa fa-coffee fa-stack-1x fa-inverse"></i>
+                </span>
+            </div>
+
+            <div id="GameStart1">
+
+                <span class="fa-stack fa-4x">
+                    <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                    <i class="fa fa-credit-card fa-stack-1x fa-inverse"></i>
+                </span>
+            </div>
+
+            <center><label id="ChooseLBL">Choose:</label></center>
+
+            <div id="icons">
+                <div class="container">
+                    <span class="fa-stack fa-4x">
+                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                        <i onclick="Ale(this.id)" style="cursor:pointer;" class="fa fa-coffee fa-stack-1x fa-inverse" id="fa fa-coffee fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <span class="fa-stack fa-4x">
+                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                        <i onclick="Ale(this.id)" style="cursor:pointer;" class="fa fa-paint-brush fa-stack-1x fa-inverse" id="fa fa-paint-brush fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <span class="fa-stack fa-4x">
+                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                        <i onclick="Ale(this.id)" style="cursor:pointer;" class="fa fa-video-camera fa-stack-1x fa-inverse" id="fa fa-video-camera fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <span class="fa-stack fa-4x">
+                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                        <i onclick="Ale(this.id)" style="cursor:pointer;" class="fa fa-rocket fa-stack-1x fa-inverse" id="fa fa-rocket fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <span class="fa-stack fa-4x">
+                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                        <i onclick="Ale(this.id)" style="cursor:pointer;" class="fa fa-wifi fa-stack-1x fa-inverse" id="fa fa-wifi fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <span class="fa-stack fa-4x">
+                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                        <i onclick="Ale(this.id)" style="cursor:pointer;" class="fa fa-user-secret fa-stack-1x fa-inverse" id="fa fa-user-secret fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <span class="fa-stack fa-4x">
+                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                        <i onclick="Ale(this.id)" style="cursor:pointer;" class="fa fa-at fa-stack-1x fa-inverse" id="fa fa-at fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <span class="fa-stack fa-4x">
+                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                        <i onclick="Ale(this.id)" style="cursor:pointer;" class="fa fa-film fa-stack-1x fa-inverse" id="fa fa-film fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <span class="fa-stack fa-4x">
+                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                        <i onclick="Ale(this.id)" style="cursor:pointer;" class="fa fa-desktop fa-stack-1x fa-inverse" id="fa fa-desktop fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <span class="fa-stack fa-4x">
+                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                        <i onclick="Ale(this.id)" style="cursor:pointer;" class="fa fa-bug fa-stack-1x fa-inverse" id="fa fa-bug fa-stack-1x fa-inverse"></i>
+                    </span>
+                </div>
+            </div>
+            <br />
+            <div id="ChronologicalIcons" style="text-align:center;">
+
+            </div>
+        </div>
+    </div>
+
+    <br />
+    <section id="Tips">
+        <div class="TipsCap">
+            <div class="TipsCaption">
+                <h3><a>Tips:</a></h3>
+                <p style="color:#31aae2; font-weight:bold;">A number of icons are shown on the screen. Your goal is to remember those and choose in same order.</p>
+            </div>
+        </div>
+    </section>
+    <br />
+    <br />
+    <div class="copyright-section" style="text-align: center; ">
+        <div class="container clearfix">
+            <span class="copytext">Copyright &copy; 2018 | <a href="http://nqportfolio.azurewebsites.net" target="_blank">NQ Enterprises</a></span>
+        </div>
+    </div>
+
+    <script src="~/Scripts/jquery-2.1.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="~/Scripts/smoothscroll.js"></script>
+    <script src="~/Scripts/mobile-menu.js"></script>
+    <script src="~/Scripts/FlexSlider/jquery.flexslider-min.js"></script>
+    <script src="~/Scripts/scripts.js"></script>
+
+</body>
+</html>
